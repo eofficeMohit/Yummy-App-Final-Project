@@ -31,7 +31,7 @@ class ChatsController extends BaseController
             $list = Chat::orderBy('id', 'desc')
                     ->whereBetween('created_at', [$start_date, $end_date]);
 
-            if(isset($request->category_id)){
+            if(isset($request->category_id) && !empty($request->pagelength)){
                 $list=$list->where('category_id', $request->category_id);
             }
 
@@ -208,7 +208,7 @@ class ChatsController extends BaseController
     {
         try{
             $data=User::where('id', $id)->first();
-            
+
             if($data){
                 Chat::where('userid', $id)->delete();
 
