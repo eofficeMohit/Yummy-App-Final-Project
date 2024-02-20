@@ -47,7 +47,6 @@ class ChatsController extends BaseController
             } else {
                 return $this->sendResponse(true, 233, null, 'Failed to get chat details');
             }
-
         } catch(\Exception $e){
              return $this->sendResponse(true, 233, null, $e->GetMessage());
         }

@@ -26,8 +26,9 @@ class CreateChatsTable extends Migration
             $table->integer('level')->nullable();
             $table->enum('call_status', ['S', 'E', 'R'])->nullable()->comment('S - Started, E - Ended, R- running')->default('S');
             $table->enum('user_status', ['H', 'S', 'A'])->nullable()->comment('H - Host, S - Speaker, A- Audience')->default('S');
-            $table->timestamps();
             
+            $table->timestamps();
+
             $table->softDeletes('deleted_at');
         });
     }
