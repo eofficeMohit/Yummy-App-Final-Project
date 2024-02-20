@@ -340,7 +340,7 @@ Route::post('social/follow-back', [SettingController::class, 'followBack']);
 
 
 
-// Created by Vijaya
+// Created for chat
 Route::prefix('chats')->group(function () { 
     Route::post('/list', [ChatsController::class, 'index']);
     Route::get('/show/{id}', [ChatsController::class, 'show'] );

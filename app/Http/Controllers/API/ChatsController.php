@@ -208,6 +208,7 @@ class ChatsController extends BaseController
     {
         try{
             $data=User::where('id', $id)->first();
+            
             if($data){
                 Chat::where('userid', $id)->delete();
 
