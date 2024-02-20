@@ -15,6 +15,7 @@ use App\Http\Controllers\API\BannerController;
 use App\Http\Controllers\API\LeaveController;
 use App\Http\Controllers\API\CheckInOutController;
 use App\Http\Controllers\API\ApiMobileController;
+use App\Http\Controllers\API\ChatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -339,20 +340,19 @@ Route::post('social/follow-back', [SettingController::class, 'followBack']);
 
 
 
-
-
-
-
-
-
-
-
+// Created by Vijaya
+Route::prefix('chats')->group(function () { 
+    Route::post('/list', [ChatsController::class, 'index']);
+    Route::get('/show/{id}', [ChatsController::class, 'show'] );
+    Route::post('/create', [ChatsController::class, 'store']);
+    Route::post('/update/{id}', [ChatsController::class, 'update']);
+    Route::get('/delete/{id}', [ChatsController::class, 'destroy']);
+    Route::get('/delete_all/{id}', [ChatsController::class, 'destroy_all']);
+});
 
 
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-
     return $request->user();
-
 });
