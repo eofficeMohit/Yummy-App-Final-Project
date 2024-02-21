@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use \Session;
+use Illuminate\Support\Str;
+use File;
+
 
 class BaseController extends Controller
 {
@@ -12522,6 +12525,61 @@ class BaseController extends Controller
     }
 
 
+    public function uploadPicture($request, $folder_path){
+        if($file=$request->file('picture')){
+            $this->generateFolder($folder_path);     
+            $path='/uploads/'.$folder_path.'/';
+            $extension = $file->extension()?: 'png';
+            $destinationPath = public_path() . $path;
+            $safeName = Str::random(10) . '.' . $extension;
+            $file->move($destinationPath, $safeName);
+            return $path.$safeName;
+        } else {
+            return '';
+        }    
+    }
 
+    private function generateFolder($folder_path){
+        $arr=explode('/',$folder_path);
+        $newPath='/uploads/'.$arr['0'];
+        if(!is_dir(public_path().$newPath."/")) {
+            File::makeDirectory(public_path().$newPath,0777,true);
+        }
+        if(count($arr)==2){
+            $newSubFolder='/uploads/'.$folder_path;
+            if(!is_dir(public_path().$newSubFolder."/")) {  
+                File::makeDirectory(public_path().$newSubFolder,0777,true);
+            }
+        }      
+    }
+
+    public function uploadJson($request, $folder_path){
+        if($file=$request->file('json_file')){
+            $this->generateFolder($folder_path);     
+            $path='/uploads/'.$folder_path.'/';
+            $extension = $file->extension()?: 'json';
+            $destinationPath = public_path() . $path;
+            $safeName = Str::random(10) . '.' . $extension;
+            $file->move($destinationPath, $safeName);
+            return $path.$safeName;
+        } else {
+            return '';
+        }    
+    }
+
+
+    public function uploadMusic($request, $folder_path){
+        if($file=$request->file('music_file')){
+            $this->generateFolder($folder_path);     
+            $path='/uploads/'.$folder_path.'/';
+            $extension = $file->extension();
+            $destinationPath = public_path() . $path;
+            $safeName = Str::random(10) . '.' . $extension;
+            $file->move($destinationPath, $safeName);
+            return $path.$safeName;
+        } else {
+            return '';
+        }    
+    }
 
 }

@@ -1909,18 +1909,13 @@ class UserController extends Controllers\BaseController
     public function login(Request $request)
     {
 
-
-
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')-> accessToken;
+            $success['token'] =  $user->createToken('MyApp')->accessToken;
 
             $success['user'] =  $user;
 
             $request->session()->put('project', $user);
-
-
-
 
             return $this->sendResponse(false, 200, $success, 'User login successfully.');
 

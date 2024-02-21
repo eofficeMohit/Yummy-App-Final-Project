@@ -17,6 +17,13 @@ use App\Http\Controllers\API\CheckInOutController;
 use App\Http\Controllers\API\ApiMobileController;
 use App\Http\Controllers\API\ChatsController;
 
+use App\Http\Controllers\API\master\ThemesController;
+use App\Http\Controllers\API\master\GiftsController;
+use App\Http\Controllers\API\master\LevelController;
+use App\Http\Controllers\API\master\BadgeController;
+use App\Http\Controllers\API\master\EntriesController;
+use App\Http\Controllers\API\master\FramesController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -348,6 +355,61 @@ Route::prefix('chats')->group(function () {
     Route::post('/update/{id}', [ChatsController::class, 'update']);
     Route::get('/delete/{id}', [ChatsController::class, 'destroy']);
     Route::get('/delete_all/{id}', [ChatsController::class, 'destroy_all']);
+});
+
+
+Route::prefix('levels')->group(function () { 
+    Route::post('/list', [LevelController::class, 'index']);
+    Route::get('/active_list', [LevelController::class, 'active_list']);
+    Route::get('/show/{id}', [LevelController::class, 'show'] );
+    Route::post('/create', [LevelController::class, 'store']);
+    Route::post('/update/{id}', [LevelController::class, 'update']);
+    Route::get('/delete/{id}', [LevelController::class, 'destroy']);
+});
+
+Route::prefix('gifts')->group(function () { 
+    Route::post('/list', [GiftsController::class, 'index']);
+    Route::get('/active_list', [GiftsController::class, 'active_list']);
+    Route::get('/show/{id}', [GiftsController::class, 'show'] );
+    Route::post('/create', [GiftsController::class, 'store']);
+    Route::post('/update/{id}', [GiftsController::class, 'update']);
+    Route::get('/delete/{id}', [GiftsController::class, 'destroy']);
+});
+
+Route::prefix('frames')->group(function () { 
+    Route::post('/list', [FramesController::class, 'index']);
+     Route::get('/active_list', [FramesController::class, 'active_list']);
+    Route::get('/show/{id}', [FramesController::class, 'show'] );
+    Route::post('/create', [FramesController::class, 'store']);
+    Route::post('/update/{id}', [FramesController::class, 'update']);
+    Route::get('/delete/{id}', [FramesController::class, 'destroy']);
+});
+
+Route::prefix('badges')->group(function () { 
+    Route::post('/list', [BadgeController::class, 'index']);
+    Route::get('/active_list', [BadgeController::class, 'active_list']);
+    Route::get('/show/{id}', [BadgeController::class, 'show'] );
+    Route::post('/create', [BadgeController::class, 'store']);
+    Route::post('/update/{id}', [BadgeController::class, 'update']);
+    Route::get('/delete/{id}', [BadgeController::class, 'destroy']);
+});
+
+Route::prefix('entries')->group(function () { 
+    Route::post('/list', [EntriesController::class, 'index']);
+    Route::get('/active_list', [EntriesController::class, 'active_list']);
+    Route::get('/show/{id}', [EntriesController::class, 'show'] );
+    Route::post('/create', [EntriesController::class, 'store']);
+    Route::post('/update/{id}', [EntriesController::class, 'update']);
+    Route::get('/delete/{id}', [EntriesController::class, 'destroy']);
+});
+
+Route::prefix('themes')->group(function () { 
+    Route::post('/list', [ThemesController::class, 'index']);
+    Route::get('/active_list', [ThemesController::class, 'active_list']);
+    Route::get('/show/{id}', [ThemesController::class, 'show'] );
+    Route::post('/create', [ThemesController::class, 'store']);
+    Route::post('/update/{id}', [ThemesController::class, 'update']);
+    Route::get('/delete/{id}', [ThemesController::class, 'destroy']);
 });
 
 
