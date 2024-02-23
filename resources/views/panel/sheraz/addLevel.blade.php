@@ -113,6 +113,7 @@
                                     <tr>
                                         
                                         <th>#</th>
+                                        <th>Title</th>
                                         <th>Picture</th>
                                         <th>Diamonds</th>
                                        
@@ -131,6 +132,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Title</th>
                                         <th>Picture</th>
                                         <th>Diamonds</th>
                                         

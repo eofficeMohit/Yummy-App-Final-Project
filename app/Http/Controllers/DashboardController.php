@@ -2994,4 +2994,67 @@ class DashboardController extends GeneralController
         }
         return view('panel.sheraz.addBubble', compact('Settings', 'User', 'is_session'));
     }
+
+    public function hostLiveData(Request $request){
+
+        // -------------------Basic--------------------------
+
+        $is_session=$this->GetSession();
+
+        if($is_session){
+            $session_user_id = $request->session()->get('project')->id;
+            $User=$this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        }else{
+            $User=null;
+        }
+
+        $Settings=$this->GetSettingsSqlData($request, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+
+        // -------------------Basic--------------------------
+
+
+        $Onboards=$this->GetOnboardsSqlData($request, null, null, null, null, 'TopUp Agent',  null, null, null, null, null, null, null, null, null);
+
+
+
+        return view('panel.sheraz.host-live-data',[
+
+            'is_session'=>$is_session,
+            'User' => $User,
+            'page'=>'Onboards',
+            'Onboards'=>$Onboards,
+
+            'Settings'=>$Settings,
+
+        ]);
+
+    }
+
+    public function receivedDiamonds(Request $request)
+    {
+        $Settings=$this->GetSettingsSqlData($request, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $is_session=$this->GetSession();
+
+        if($is_session){
+            $session_user_id = $request->session()->get('project')->id;
+            $User=$this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        }else{
+            $User=null;
+        }
+        return view('panel.sheraz.receivedDiamonds', compact('Settings', 'User', 'is_session'));
+    }
+    public function sendDiamondHistory(Request $request)
+    {
+        $Settings=$this->GetSettingsSqlData($request, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $is_session=$this->GetSession();
+
+        if($is_session){
+            $session_user_id = $request->session()->get('project')->id;
+            $User=$this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        }else{
+            $User=null;
+        }
+        return view('panel.sheraz.sendDiamondHistory', compact('Settings', 'User', 'is_session'));
+    }
 }

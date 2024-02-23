@@ -193,7 +193,12 @@ textarea.form-control{
 	<div class="form-wrap">	
 		<form id="survey-form">
 			<div class="row">
-				
+            <div class="col-md-6">
+					<div class="form-group">
+						<label id="email-label" for="">Title</label>
+						<input type="text" name="title" id="" placeholder="Title" class="form-control" required>
+					</div>
+				</div>
 				<div class="col-md-6">
 					<div class="form-group">
 						<label id="email-label" for="email">Choose PNG Picture</label>

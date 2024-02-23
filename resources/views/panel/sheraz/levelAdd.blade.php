@@ -196,6 +196,13 @@ textarea.form-control{
 				
 				<div class="col-md-12">
 					<div class="form-group">
+						<label id="email-label" for="email">Level Title</label>
+						<input type="text" name="title" id="email" placeholder="Enter your Level Title" class="form-control" required>
+					</div>
+				</div>
+
+                <div class="col-md-12">
+					<div class="form-group">
 						<label id="email-label" for="email">Choose PNG Picture</label>
 						<input type="file" name="picture" id="email" placeholder="Enter your email" class="" required>
 					</div>

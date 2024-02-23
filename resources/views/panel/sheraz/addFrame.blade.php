@@ -113,6 +113,7 @@
                                     <tr>
                                         
                                         <th>#</th>
+                                        <th>Title</th>
                                         <th>Picture</th>
                                         <th>Weekly Diamonds</th>
                                         <th>Two Weeks Diamonds</th>
@@ -133,6 +134,7 @@
                                     <thead>
                                     <tr>
                                     <th>#</th>
+                                    <th>Title</th>
                                         <th>Picture</th>
                                         <th>Weekly Diamonds</th>
                                         <th>Two Weeks Diamonds</th>

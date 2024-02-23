@@ -40,7 +40,44 @@
                 </a>
             </li>
             @endif
-
+            @if($User->user_type_slug=='agent')
+            <li class="nav-item">
+                <a
+                    href="{{ url('/admin/received-diamonds') }}"
+                    class="d-flex align-items-center"
+                    target="_self"
+                >
+                    <i data-feather="grid"></i>
+                    <span class="menu-title text-truncate">Receive Diamonds History</span>
+                </a>
+            </li>
+            @endif
+            @if($User->user_type_slug=='agent')
+            <li class="nav-item">
+                <a
+                    href="{{ url('/admin/send-diamond-history') }}"
+                    class="d-flex align-items-center"
+                    target="_self"
+                >
+                    <i data-feather="grid"></i>
+                    <span class="menu-title text-truncate">Send Diamonds History</span>
+                </a>
+            </li>
+           
+            @endif
+            @if($User->user_type_slug=='agent')
+            <li class="nav-item">
+                <a
+                    href="{{ url('admin/dashboard') }}"
+                    class="d-flex align-items-center"
+                    target="_self"
+                >
+                    <i data-feather="grid"></i>
+                    <span class="menu-title text-truncate">Search User</span>
+                </a>
+            </li>
+            @endif
+           
             {{--Users--}}
             @if($User->user_type_slug=='administrator')
             <li class="nav-item">
@@ -315,7 +352,19 @@
                 </a>
             </li>
             @endif
-
+            @if($User->user_type_slug=='administrator' ||
+            $User->user_type_slug=='agency')
+            <li class="nav-item">
+                <a
+                    href="{{ url('/admin/host-live-data') }}"
+                    class="d-flex align-items-center"
+                    target="_self"
+                >
+                    <i data-feather="clipboard"></i>
+                    <span class="menu-title text-truncate">Host Live Data</span>
+                </a>
+            </li>
+@endif
             {{--Notifications--}}
             @if($User->user_type_slug=='administrator')
             <li class="nav-item">

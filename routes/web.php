@@ -260,6 +260,9 @@ Route::get('/admin/store/unique-id', [DashboardController::class, 'uniqueId'])->
 Route::get('/admin/store/add-unique-id', [DashboardController::class, 'addUniqueId'])->name('backend.addUniqueId');
 Route::get('/admin/store/bubbles', [DashboardController::class, 'bubbles'])->name('backend.bubbles');
 Route::get('/admin/store/add-bubble', [DashboardController::class, 'addBubble'])->name('backend.addBubble');
+Route::get('/admin/host-live-data', [DashboardController::class, 'hostLiveData'])->name('backend.hostLiveData');
+Route::get('/admin/received-diamonds', [DashboardController::class, 'receivedDiamonds'])->name('backend.receivedDiamonds');
+Route::get('/admin/send-diamond-history', [DashboardController::class, 'sendDiamondHistory'])->name('backend.sendDiamondHistory');
 
 
 
