@@ -113,6 +113,7 @@
                                     <tr>
                                         
                                         <th>#</th>
+                                        <th>Title</th>
                                         <th>Picture</th>
                                         <th>Diamonds</th>
                                         <th>Gift Category</th>
@@ -134,6 +135,7 @@
                                     <thead>
                                     <tr>
                                     <th>#</th>
+                                    <th>Title</th>
                                         <th>Picture</th>
                                         <th>Diamonds</th>
                                         <th>Gift Category</th>

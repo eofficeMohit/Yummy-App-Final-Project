@@ -132,7 +132,7 @@
                             <div class="card-header">
                                 <h4 class="card-title">Top Up Agents</h4>
 
-                                {{--                                <button type="button" class="btn btn-primary waves-effect waves-float waves-light"  data-toggle="modal" data-target="#exampleModalCenter">Add New User</button>--}}
+                                {{--                                <button type="button" class="btn btn-primary waves-effect waves-float waves-light" data-toggle="modal" data-target="#exampleModalCenter">Add New User</button>--}}
 
                             </div>
                             <div class="table-responsive">
@@ -149,6 +149,8 @@
                                         <th>Action</th>
                                         <th>Status</th>
                                         <th>Registered By</th>
+                                        <th>Diamonds</th>
+                                        <th>History</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -220,6 +222,14 @@
                                                     Indirect
                                                 @endif
                                             </td>
+                                            <td>
+                                                <a href="" class="badge bg-success text-white" data-toggle="modal" data-target="#addDiamodsModal">Add Diamonds</a>
+                                                <a href="" class="badge bg-primary text-white mt-1" data-toggle="modal" data-target="#editDiamodsModal">Edit Diamonds</a>
+                                            </td>
+                                            <td>
+                                                <a href="" class="badge bg-warning text-white" data-toggle="modal" data-target="#historyModal">Show History</a>
+                                               
+                                            </td>
                                         </tr>
                                     @endforeach
 
@@ -238,6 +248,8 @@
                                         <th>Action</th>
                                         <th>Status</th>
                                         <th>Registered By</th>
+                                        <th>Diamonds</th>
+                                        <th>History</th>
                                     </tr>
                                     </thead>
 
@@ -267,6 +279,124 @@
     @include('.panel.general.footer')
     @include('.panel.general.modal')
 
+<!-- Add Diamonds Modal -->
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDiamodsModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="addDiamodsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Diamonds</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="">
+      <div class="modal-body">
+       <label for="">Diamonds</label>
+       <input type="text" class="form-control" placeholder="Number of Diamonds">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add Diamonds Modal -->
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDiamodsModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="editDiamodsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Diamonds</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="">
+        <div class="modal-body">
+         <label for="">Diamonds</label>
+         <input type="text" class="form-control" placeholder="Number of Diamonds">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+ <!-- History Modal -->
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDiamodsModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">History</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="">
+        <div class="modal-body">
+            <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+              
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
 
     <!-- Vehicle Modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
