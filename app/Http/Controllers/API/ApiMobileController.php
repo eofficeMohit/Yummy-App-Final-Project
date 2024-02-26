@@ -1345,7 +1345,7 @@ class ApiMobileController extends Controllers\BaseController
         $inc = 0;
         $id = $request['id'];
 
-        // ----------Check already followed or Not-----------------
+        // ----------To find whether user already followed or Not-----------------
 
         if ($session_user_id == $id) {
             $data[] = [
@@ -1353,13 +1353,11 @@ class ApiMobileController extends Controllers\BaseController
                 'code' => '4545',
                 'message' => 'You can not follow yourself',
             ];
-            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES); // Remove backward slashes from URL and encode
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
             return $jsonData;
         }
 
-        // ----------Check already followed or Not-----------------
-
-        // ----------Check already followed or Not-----------------
+        // ----------To find whether user already followed or Not-----------------
         $followingData = DB::table('followers')->where('followed_to_id', $id)->where('created_by_user_id', $session_user_id)->first();
 
         if (!is_null($followingData)) {
@@ -1368,10 +1366,10 @@ class ApiMobileController extends Controllers\BaseController
                 'code' => '4545',
                 'message' => 'Already Followed.',
             ];
-            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES); // Remove backward slashes from URL and encode
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
             return $jsonData;
         }
-        // ----------Check already followed or Not-----------------
+        // ----------To find whether user already followed or Not-----------------
 
         if ($inc == 0) {
             $follower_id = DB::table('followers')->insertGetId(
@@ -1387,7 +1385,7 @@ class ApiMobileController extends Controllers\BaseController
                 'id',
             );
 
-            //-----------------Update and Decrement for Own----------------------
+            //-----------------Update and Decrement number of followings for itself----------------------
 
             $OwnUser = DB::table('users')->select('users.id as id', 'users.no_of_followings as no_of_followings')->where('users.id', $session_user_id)->first();
 
@@ -1397,9 +1395,9 @@ class ApiMobileController extends Controllers\BaseController
                     'no_of_followings' => $OwnUser->no_of_followings + 1,
                 ]);
 
-            //-----------------Update and Decrement for Own----------------------
+            //-----------------Update and Decrement number of followings for itself----------------------
 
-            //-----------------Update and Decrement for Friend----------------------
+            //-----------------Update and Decrement  others number of followings----------------------
 
             $FriendUser = DB::table('users')->select('users.id as id', 'users.no_of_followers as no_of_followers')->where('users.id', $id)->first();
 
@@ -1409,7 +1407,7 @@ class ApiMobileController extends Controllers\BaseController
                     'no_of_followers' => $FriendUser->no_of_followers + 1,
                 ]);
 
-            //-----------------Update and Increment for Friend----------------------
+            //-----------------Update and Increment number of followings for others----------------------
 
             if ($IncUser) {
                 $data[] = [
@@ -1417,7 +1415,7 @@ class ApiMobileController extends Controllers\BaseController
                     'code' => '200',
                     'message' => 'Successfully Followed',
                 ];
-                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES); // Remove backward slashes from URL and encode
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
                 return $jsonData;
             } else {
                 $data[] = [
@@ -1426,7 +1424,7 @@ class ApiMobileController extends Controllers\BaseController
                     'message' => 'Query Failed, Contact System administrator.',
                 ];
 
-                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES); // Remove backward slashes from URL and encode
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
                 return $jsonData;
             }
         } else {
@@ -1436,12 +1434,523 @@ class ApiMobileController extends Controllers\BaseController
                 'message' => 'Operation Failed, Contact System administrator.',
             ];
 
-            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES); // Remove backward slashes from URL and encode
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+    }
+    //    ------------------------------------------/ follow--------------------------------------------------------
+
+    //    ------------------------------------------/ unfollow /-------------------------------------------------------
+
+    public function unfollow(Request $request)
+    {
+        //---------------------------Validation-------------------------------------
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse(true, 312, null, 'Validation error, recheck all fields.');
+        }
+        //---------------------------Validation-------------------------------------
+
+        $timezone = 'Asia/Dhaka';
+        date_default_timezone_set($timezone);
+
+        $is_session = $this->GetSession();
+
+        if ($is_session) {
+            $session_user_id = $request->session()->get('project')->id;
+            $User = $this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        } else {
+            $User = null;
+        }
+
+        $inc = 0;
+
+        $id = $request['id'];
+
+        // ----------To find if data exists in followers table-----------------
+        $followerData = DB::table('followers')->where('followed_to_id', $id)->where('created_by_user_id', $session_user_id)->first();
+
+        if (is_null($followerData)) {
+            $data[] = [
+                'error' => 'true',
+                'code' => '4545',
+                'message' => 'You can not unfollow because you are not follow.',
+            ];
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+        // ----------To find if data exists in followers table-----------------
+
+        if ($inc == 0) {
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            $follower = DB::table('followers')
+                ->where('id', '=', $followerData->id)
+                ->delete();
+
+            $OwnUser = DB::table('users')->select('users.id as id', 'users.no_of_followings as no_of_followings')->where('users.id', $session_user_id)->first();
+
+            $DecUser = DB::table('users')
+                ->where('id', $session_user_id)
+                ->update([
+                    'no_of_followings' => $OwnUser->no_of_followings - 1,
+                ]);
+
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            //-----------------Update and Decrement  others number of followings----------------------
+
+            $FriendUser = DB::table('users')
+                ->select('users.id as id', 'users.no_of_followers as no_of_followers')
+                ->where('users.id', $followerData->followed_to_id)
+                ->first();
+
+            $DecUser = DB::table('users')
+                ->where('id', $followerData->followed_to_id)
+                ->update([
+                    'no_of_followers' => $FriendUser->no_of_followers - 1,
+                ]);
+
+            //-----------------Update and Increment number of followings for others----------------------
+
+            if ($follower) {
+                $data[] = [
+                    'error' => 'false',
+                    'code' => '200',
+                    'message' => 'Successfully unfollowed',
+                ];
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            } else {
+                $data[] = [
+                    'error' => 'true',
+                    'code' => '0',
+                    'message' => 'Query Failed, Contact System administrator.',
+                ];
+
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            }
+        } else {
+            $data[] = [
+                'error' => 'true',
+                'code' => '0',
+                'message' => 'Operation Failed, Contact System administrator.',
+            ];
+
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
             return $jsonData;
         }
     }
 
-    //    ------------------------------------------/User follow--------------------------------------------------------
+    //    -----------------------------------------/unfollow-------------------------------------------------------
+
+    //    -----------------------------------------------to Following---------------------------------------------------------
+
+    public function toFollowing(Request $request)
+    {
+        //---------------------------Validation-------------------------------------
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse(true, 312, null, 'Validation error, recheck all fields.');
+        }
+        //---------------------------Validation-------------------------------------
+
+        $timezone = 'Asia/Dhaka';
+        date_default_timezone_set($timezone);
+
+        $is_session = $this->GetSession();
+
+        if ($is_session) {
+            $session_user_id = $request->session()->get('project')->id;
+            $User = $this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        } else {
+            $User = null;
+        }
+
+        $inc = 0;
+
+        $id = $request['id'];
+
+        // ----------To find if user ID exist or not-----------------
+        if ($id != null) {
+            $userData = DB::table('users')->where('id', $id)->first();
+
+            if (count((array) $userData) == 0) {
+                $data[] = [
+                    'error' => 'true',
+                    'code' => '743',
+                    'message' => 'User ID not found, please contact to system administrator.',
+                ];
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            }
+        } else {
+            $data[] = [
+                'error' => 'true',
+                'code' => '404',
+                'message' => 'User ID can not be null.',
+            ];
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+        // ----------To find if user ID exist or not-----------------
+
+        // ----------To find whether user already followed or Not-----------------
+        $followingData = DB::table('followers')->where('followed_to_id', $id)->where('created_by_user_id', $session_user_id)->first();
+
+        if (!is_null($followingData)) {
+            $data[] = [
+                'error' => 'true',
+                'code' => '4545',
+                'message' => 'Already Followed.',
+            ];
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+        // ----------To find whether user already followed or Not-----------------
+
+        if ($inc == 0) {
+            $follower_id = DB::table('followers')->insertGetId(
+                [
+                    'followed_to_id' => $id,
+                    'followed_type' => 'UserToUser',
+                    'action_status' => null,
+
+                    'status' => 'Active',
+                    'order_by' => null,
+                    'created_by_user_id' => $session_user_id,
+                ],
+                'id',
+            );
+
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            $OwnUser = DB::table('users')->select('users.id as id', 'users.no_of_followings as no_of_followings')->where('users.id', $session_user_id)->first();
+
+            $IncUser = DB::table('users')
+                ->where('id', $session_user_id)
+                ->update([
+                    'no_of_followings' => $OwnUser->no_of_followings + 1,
+                ]);
+
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            //-----------------Update and Decrement  others number of followings----------------------
+
+            $FriendUser = DB::table('users')->select('users.id as id', 'users.no_of_followers as no_of_followers')->where('users.id', $id)->first();
+
+            $IncUser = DB::table('users')
+                ->where('id', $id)
+                ->update([
+                    'no_of_followers' => $FriendUser->no_of_followers + 1,
+                ]);
+
+            //-----------------Update and Increment number of followings for others----------------------
+
+            //            $notification_id=DB::table('notifications')->insertGetId(
+            //                [
+            //                    'notification_for_user_id' => $id,
+            //                    'notification_type' => 'Follow',
+            //                    'reference_type' => 'User',
+            //                    'reference_id' => $session_user_id,
+            //                    'read_status' => 'Unread',
+            //
+            //                    'status' => 'Active',
+            //                    'created_by_user_id' => $session_user_id,
+            //                ]
+            //                , 'id');
+
+            if ($IncUser) {
+                $data[] = [
+                    'error' => 'false',
+                    'code' => '200',
+                    'message' => 'Successfully Followed',
+                ];
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            } else {
+                $data[] = [
+                    'error' => 'true',
+                    'code' => '0',
+                    'message' => 'Query Failed, Contact System administrator.',
+                ];
+
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            }
+        } else {
+            $data[] = [
+                'error' => 'true',
+                'code' => '0',
+                'message' => 'Operation Failed, Contact System administrator.',
+            ];
+
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+    }
+
+    //    ----------------------------------------------/ toFollowing /---------------------------------------------------------
+
+    //    -------------------------------------------/ remove Follower /-------------------------------------------------------
+
+    public function removeFollower(Request $request)
+    {
+        //---------------------------Validation-------------------------------------
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse(true, 312, null, 'Validation error, recheck all fields.');
+        }
+        //---------------------------Validation-------------------------------------
+
+        $timezone = 'Asia/Dhaka';
+        date_default_timezone_set($timezone);
+
+        $is_session = $this->GetSession();
+
+        if ($is_session) {
+            $session_user_id = $request->session()->get('project')->id;
+            $User = $this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        } else {
+            $User = null;
+        }
+
+        $inc = 0;
+
+        $id = $request['id'];
+
+        // ----------Check data in followers table-----------------
+        $followerData = DB::table('followers')->where('id', $id)->where('followed_to_id', $session_user_id)->first();
+
+        if (is_null($followerData)) {
+            $data[] = [
+                'error' => 'true',
+                'code' => '4545',
+                'message' => 'Record not found.',
+            ];
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+        // ----------Check data in followers table-----------------
+
+        if ($inc == 0) {
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            $follower = DB::table('followers')->where('id', '=', $id)->delete();
+
+            $OwnUser = DB::table('users')->select('users.id as id', 'users.no_of_followers as no_of_followers')->where('users.id', $session_user_id)->first();
+
+            $DecUser = DB::table('users')
+                ->where('id', $session_user_id)
+                ->update([
+                    'no_of_followers' => $OwnUser->no_of_followers - 1,
+                ]);
+
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            //-----------------Update and Decrement  others number of followings----------------------
+
+            $FriendUser = DB::table('users')
+                ->select('users.id as id', 'users.no_of_followings as no_of_followings')
+                ->where('users.id', $followerData->created_by_user_id)
+                ->first();
+
+            $DecUser = DB::table('users')
+                ->where('id', $followerData->created_by_user_id)
+                ->update([
+                    'no_of_followings' => $FriendUser->no_of_followings - 1,
+                ]);
+
+            //-----------------Update and Increment number of followings for others----------------------
+
+            if ($DecUser) {
+                $data[] = [
+                    'error' => 'false',
+                    'code' => '200',
+                    'message' => 'Successfully Removed Follower',
+                ];
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            } else {
+                $data[] = [
+                    'error' => 'true',
+                    'code' => '0',
+                    'message' => 'Query Failed, Contact System administrator.',
+                ];
+
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            }
+        } else {
+            $data[] = [
+                'error' => 'true',
+                'code' => '0',
+                'message' => 'Operation Failed, Contact System administrator.',
+            ];
+
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+    }
+
+    //    ------------------------------------------/ remove follow /-------------------------------------------------------
+
+    //    --------------------------------------------/ follow Back /-------------------------------------------------------
+
+    public function followBack(Request $request)
+    {
+        //---------------------------Validation-------------------------------------
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse(true, 312, null, 'Validation error, recheck all fields.');
+        }
+        //---------------------------Validation-------------------------------------
+
+        $timezone = 'Asia/Dhaka';
+        date_default_timezone_set($timezone);
+
+        $is_session = $this->GetSession();
+
+        if ($is_session) {
+            $session_user_id = $request->session()->get('project')->id;
+            $User = $this->GetUsersSqlData($request, $session_user_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        } else {
+            $User = null;
+        }
+
+        $inc = 0;
+        $id = $request['id'];
+
+        // ----------To find if data exists in followers table-----------------
+        $followerData = DB::table('followers')->where('id', $id)->where('followed_to_id', $session_user_id)->first();
+
+        if (is_null($followerData)) {
+            $data[] = [
+                'error' => 'true',
+                'code' => '4545',
+                'message' => 'Record not found.',
+            ];
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+        // ----------To find if data exists in followers table-----------------
+
+        // ----------To find whether user already followed or Not-----------------
+        $followingData = DB::table('followers')
+            ->where('followed_to_id', $followerData->created_by_user_id)
+            ->where('created_by_user_id', $session_user_id)
+            ->first();
+
+        if (!is_null($followingData)) {
+            $data[] = [
+                'error' => 'true',
+                'code' => '4545',
+                'message' => 'Already Followed.',
+            ];
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+        // ----------To find whether user already followed or Not-----------------
+
+        if ($inc == 0) {
+            $follower_id = DB::table('followers')->insertGetId(
+                [
+                    'followed_to_id' => $followerData->created_by_user_id,
+                    'followed_type' => 'UserToUser',
+                    'action_status' => null,
+                    'status' => 'Active',
+                    'order_by' => null,
+                    'created_by_user_id' => $session_user_id,
+                ],
+                'id',
+            );
+
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            $OwnUser = DB::table('users')->select('users.id as id', 'users.no_of_followings as no_of_followings')->where('users.id', $session_user_id)->first();
+
+            $IncUser = DB::table('users')
+                ->where('id', $session_user_id)
+                ->update([
+                    'no_of_followings' => $OwnUser->no_of_followings + 1,
+                ]);
+
+            //-----------------Update and Decrement number of followings for itself----------------------
+
+            //-----------------Update and Decrement  others number of followings----------------------
+
+            $FriendUser = DB::table('users')
+                ->select('users.id as id', 'users.no_of_followers as no_of_followers')
+                ->where('users.id', $followerData->created_by_user_id)
+                ->first();
+
+            $IncUser = DB::table('users')
+                ->where('id', $followerData->created_by_user_id)
+                ->update([
+                    'no_of_followers' => $FriendUser->no_of_followers + 1,
+                ]);
+
+            //-----------------Update and Increment number of followings for others----------------------
+
+            //                  Notifications part
+
+            //            $notification_id=DB::table('notifications')->insertGetId(
+            //                [
+            //                    'notification_for_user_id' => $followerData->created_by_user_id,
+            //                    'notification_type' => 'Follow',
+            //                    'reference_type' => 'User',
+            //                    'reference_id' => $followerData->created_by_user_id,
+            //                    'read_status' => 'Unread',
+            //
+            //                    'status' => 'Active',
+            //                    'created_by_comp_id' => $session_comp_id,
+            //                    'created_by_user_id' => $session_user_id,
+            //                    'created_at' => $CurrentDateTime,
+            //                ]
+            //                , 'id');
+
+            if ($IncUser) {
+                $data[] = [
+                    'error' => 'false',
+                    'code' => '200',
+                    'message' => 'Successfully Followed Back',
+                ];
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            } else {
+                $data[] = [
+                    'error' => 'true',
+                    'code' => '0',
+                    'message' => 'Query Failed, Contact System administrator.',
+                ];
+
+                $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+                return $jsonData;
+            }
+        } else {
+            $data[] = [
+                'error' => 'true',
+                'code' => '0',
+                'message' => 'Operation Failed, Contact System administrator.',
+            ];
+
+            $jsonData = json_encode($data, JSON_UNESCAPED_SLASHES);
+            return $jsonData;
+        }
+    }
 }
 
 ?>

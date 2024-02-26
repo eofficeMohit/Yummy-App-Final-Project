@@ -29,9 +29,12 @@ use App\Http\Controllers\API\ApiMobileController;
 
 //-------------------------------API for Mobile App------------------------------------
 
+Route::fallback(function ($e) {
+    return response()->json(['message' => $e->getMessage()], 404);
+});
 Route::post('/mobile/sign-in', [ApiMobileController::class, 'signIn']);
 Route::post('/mobile/sign-up', [ApiMobileController::class, 'signUp']);
-Route::post('/mobile/follow', [ApiMobileController::class, 'newfollow']);
+
 Route::post('/mobile/forgot-password', [ApiMobileController::class, 'forgotPassword']);
 Route::post('/mobile/validate-code', [ApiMobileController::class, 'validateCode']);
 Route::post('/mobile/reset-password', [ApiMobileController::class, 'resetPassword']);
@@ -193,4 +196,13 @@ Route::post('social/follow-back', [SettingController::class, 'followBack']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/mobile/follow', [ApiMobileController::class, 'newfollow']);
+    Route::post('mobile/to-following', [ApiMobileController::class, 'toFollowing']);
+    Route::post('mobile/unfollow', [ApiMobileController::class, 'unfollow']);
+
+    Route::post('mobile/remove-follower', [ApiMobileController::class, 'removeFollower']);
+    Route::post('mobile/follow-back', [ApiMobileController::class, 'followBack']);
 });
